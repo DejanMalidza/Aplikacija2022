@@ -1,0 +1,22 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Administrator } from 'entities/administrator.entity';
+import { Repository } from 'typeorm';
+
+@Injectable()
+export class AdministratorService {
+    constructor(
+        @InjectRepository(Administrator) 
+        private readonly adiministrator: Repository<Administrator>,
+    ) { }
+    
+    getAll(): Promise<Administrator[]> {
+        return this.adiministrator.find();
+    }
+
+    getById(id: number): Promise<Administrator> {
+        return this.adiministrator.findOne(id);
+    }
+}
+
+
