@@ -5,6 +5,16 @@ import { AppController } from './app.controller';
 import { DatabaseConfiguration } from '../config/database configuration';
 import { Administrator } from 'entities/administrator.entity';
 import { AdministratorService } from './services/administrator/administrator.service';
+import { ArticleFeature } from 'entities/article-feature.entity';
+import { ArticlePrice } from 'entities/article-price.entity';
+import { Article } from 'entities/article.entity';
+import { Cart } from 'entities/cart.entity';
+import { CartArticle } from 'entities/cart-article.entity';
+import { Feature } from 'entities/featue.entity';
+import { Photo } from 'entities/photo.entity';
+import { Order } from 'entities/order.entity';
+import { User } from 'entities/user.entity';
+import { Category } from 'entities/category.entity';
 
 @Module({
   imports: [
@@ -15,7 +25,8 @@ import { AdministratorService } from './services/administrator/administrator.ser
       username: DatabaseConfiguration.username,
       password: DatabaseConfiguration.password,
       database: DatabaseConfiguration.database,
-      entities: [ Administrator ]
+      entities: [ Administrator, ArticleFeature, ArticlePrice, Article, 
+      Cart, CartArticle, Feature, Photo, Order, User, Category ]
     }),
     TypeOrmModule.forFeature([Administrator])
   ],
