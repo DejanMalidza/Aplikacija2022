@@ -10,8 +10,8 @@ export class Administrator {
   })
   administratorId: number;
 
-  @Column("varchar", {
-    name: "username",
+  @Column({
+    type: "varchar", 
     unique: true,
     length: 32,
   })
