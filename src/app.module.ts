@@ -10,7 +10,6 @@ import { ArticlePrice } from 'entities/article-price.entity';
 import { Article } from 'entities/article.entity';
 import { Cart } from 'entities/cart.entity';
 import { CartArticle } from 'entities/cart-article.entity';
-import { Feature } from 'entities/feature.entity';
 import { Photo } from 'entities/photo.entity';
 import { Order } from 'entities/order.entity';
 import { User } from 'entities/user.entity';
@@ -20,6 +19,7 @@ import { CategoryService } from './services/administrator/category/category.serv
 import { CategoryController } from './controllers/api/administarator.controller.ts/category.controller';
 import { ArticleService } from './services/administrator/article/article.service';
 import { ArticleController } from './controllers/api/administarator.controller.ts/article.controller';
+import { Feature } from 'entities/feature.entity';
 
 @Module({
   imports: [
@@ -33,11 +33,12 @@ import { ArticleController } from './controllers/api/administarator.controller.t
       entities: [ Administrator, ArticleFeature, ArticlePrice, Article, 
       Cart, CartArticle, Feature, Photo, Order, User, Category ]
     }),
-    TypeOrmModule.forFeature([Administrator, Category, Article, ])
+    TypeOrmModule.forFeature([Administrator, Category, Article,
+    ArticlePrice, ArticleFeature ])
   ],
   controllers: [AppController, AdministratorController, 
     CategoryController, ArticleController],
   providers: [AdministratorService, CategoryService, 
-    ArticleService],
+    ArticleService, ],
 })
 export class AppModule {}
