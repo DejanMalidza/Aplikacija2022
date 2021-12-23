@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './controllers/app.controller';
 
@@ -20,6 +20,8 @@ import { CategoryController } from './controllers/api/administarator.controller.
 import { ArticleService } from './services/administrator/article/article.service';
 import { ArticleController } from './controllers/api/administarator.controller.ts/article.controller';
 import { Feature } from 'entities/feature.entity';
+import { AuthController } from './controllers/api/administarator.controller.ts/auth.controller';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 
 @Module({
   imports: [
@@ -37,8 +39,18 @@ import { Feature } from 'entities/feature.entity';
     ArticlePrice, ArticleFeature ])
   ],
   controllers: [AppController, AdministratorController, 
-    CategoryController, ArticleController],
+    CategoryController, ArticleController, AuthController],
   providers: [AdministratorService, CategoryService, 
     ArticleService, ],
+  exports: [
+    AdministratorService,
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+   consumer
+      .apply(AuthMiddleware)
+      .exclude('auth/*')
+      .forRoutes('api/*')
+  }
+}
