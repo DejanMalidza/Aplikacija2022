@@ -22,6 +22,7 @@ import { ArticleController } from './controllers/api/administarator.controller.t
 import { Feature } from 'entities/feature.entity';
 import { AuthController } from './controllers/api/administarator.controller.ts/auth.controller';
 import { AuthMiddleware } from './middlewares/auth.middleware';
+import { PhotoService } from './services/photo/photo.servis';
 
 @Module({
   imports: [
@@ -35,13 +36,13 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
       entities: [ Administrator, ArticleFeature, ArticlePrice, Article, 
       Cart, CartArticle, Feature, Photo, Order, User, Category ]
     }),
-    TypeOrmModule.forFeature([Administrator, Category, Article,
-    ArticlePrice, ArticleFeature ])
+    TypeOrmModule.forFeature([Administrator, ArticleFeature, ArticlePrice, Article, 
+      Cart, CartArticle, Feature, Photo, Order, User, Category ])
   ],
   controllers: [AppController, AdministratorController, 
     CategoryController, ArticleController, AuthController],
   providers: [AdministratorService, CategoryService, 
-    ArticleService, ],
+    ArticleService, PhotoService ],
   exports: [
     AdministratorService,
   ],
