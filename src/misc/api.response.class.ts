@@ -8,5 +8,4 @@ export class ApiResponse {
         this.statusCode = statusCode;
         this.message = message;
     }
-
 }

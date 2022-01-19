@@ -1,10 +1,13 @@
 import * as Validator from 'class-validator';
 
-export class LoginAdministratorDto {
+export class LoginUserDto {
     @Validator.IsNotEmpty()
-    @Validator.IsString()
-    @Validator.Matches(/^[a-z][a-z0-9\.]{3,30}[a-z0-9]$/)
-    username: string;
+    @Validator.IsEmail({
+        allow_ip_domain: false,
+        allow_utf8_local_part: true,
+        require_tld: true,
+    })
+    email: string;
 
     @Validator.IsNotEmpty()
     @Validator.IsString()

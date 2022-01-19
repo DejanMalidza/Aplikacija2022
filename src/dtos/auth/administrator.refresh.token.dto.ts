@@ -1,8 +1,7 @@
 import * as Validator from 'class-validator';
 
-export class EditAdministratorDto {
+export class AdministratorRefreshTokenDto {
     @Validator.IsNotEmpty()
     @Validator.IsString()
-    @Validator.Length(6, 128)
-    password: string;
+    token: string;
 }

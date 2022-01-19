@@ -1,28 +1,39 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './controllers/app.controller';
-
-import { DatabaseConfiguration } from '../config/database configuration';
-import { Administrator } from 'entities/administrator.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DatabaseConfiguration } from 'config/database.configuration';
+import { Administrator } from 'src/entities/administrator.entity';
 import { AdministratorService } from './services/administrator/administrator.service';
-import { ArticleFeature } from 'entities/article-feature.entity';
-import { ArticlePrice } from 'entities/article-price.entity';
-import { Article } from 'entities/article.entity';
-import { Cart } from 'entities/cart.entity';
-import { CartArticle } from 'entities/cart-article.entity';
-import { Photo } from 'entities/photo.entity';
-import { Order } from 'entities/order.entity';
-import { User } from 'entities/user.entity';
-import { Category } from 'entities/category.entity';
-import { AdministratorController } from './controllers/api/administarator.controller.ts/administrator.controller';
-import { CategoryService } from './services/administrator/category/category.service';
-import { CategoryController } from './controllers/api/administarator.controller.ts/category.controller';
-import { ArticleService } from './services/administrator/article/article.service';
-import { ArticleController } from './controllers/api/administarator.controller.ts/article.controller';
-import { Feature } from 'entities/feature.entity';
-import { AuthController } from './controllers/api/administarator.controller.ts/auth.controller';
+import { ArticleFeature } from 'src/entities/article-feature.entity';
+import { ArticlePrice } from 'src/entities/article-price.entity';
+import { Article } from 'src/entities/article.entity';
+import { CartArticle } from 'src/entities/cart-article.entiry';
+import { Cart } from 'src/entities/cart.entity';
+import { Category } from 'src/entities/category.entity';
+import { Feature } from 'src/entities/feature.entity';
+import { Order } from 'src/entities/order.entity';
+import { Photo } from 'src/entities/photo.entity';
+import { User } from 'src/entities/user.entity';
+import { AdministratorController } from './controllers/api/administrator.controller';
+import { CategoryController } from './controllers/api/category.controller';
+import { CategoryService } from './services/category/category.service';
+import { ArticleService } from './services/article/article.service';
+import { ArticleController } from './controllers/api/article.controller';
+import { AuthController } from './controllers/api/auth.controller';
 import { AuthMiddleware } from './middlewares/auth.middleware';
-import { PhotoService } from './services/photo/photo.servis';
+import { PhotoService } from './services/photo/photo.service';
+import { FeatureService } from './services/feature/feature.service';
+import { FeatureController } from './controllers/api/feature.controller';
+import { UserService } from './services/user/user.service';
+import { CartService } from './services/cart/cart.service';
+import { UserCartController } from './controllers/api/user.cart.controller';
+import { OrderService } from './services/order/order.service';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailConfig } from 'config/mail.config';
+import { OrderMailer } from './services/order/order.mailer.service';
+import { AdministratorOrderController } from './controllers/api/administrator.order.controller';
+import { UserToken } from './entities/user-token.entity';
+import { AdministratorToken } from './entities/administrator-token.entity';
 
 @Module({
   imports: [
@@ -33,25 +44,77 @@ import { PhotoService } from './services/photo/photo.servis';
       username: DatabaseConfiguration.username,
       password: DatabaseConfiguration.password,
       database: DatabaseConfiguration.database,
-      entities: [ Administrator, ArticleFeature, ArticlePrice, Article, 
-      Cart, CartArticle, Feature, Photo, Order, User, Category ]
+      entities: [
+        Administrator,
+        ArticleFeature,
+        ArticlePrice,
+        Article,
+        CartArticle,
+        Cart,
+        Category,
+        Feature,
+        Order,
+        Photo,
+        User,
+        UserToken,
+        AdministratorToken,
+      ]
     }),
-    TypeOrmModule.forFeature([Administrator, ArticleFeature, ArticlePrice, Article, 
-      Cart, CartArticle, Feature, Photo, Order, User, Category ])
+    TypeOrmModule.forFeature([
+      Administrator,
+      ArticleFeature,
+      ArticlePrice,
+      Article,
+      CartArticle,
+      Cart,
+      Category,
+      Feature,
+      Order,
+      Photo,
+      User,
+      UserToken,
+      AdministratorToken,
+    ]),
+    MailerModule.forRoot({
+      transport: 'smtps://' + MailConfig.username + ':' +
+                              MailConfig.password + '@' +
+                              MailConfig.hostname,
+      defaults: {
+        from: MailConfig.senderEmail,
+      },
+    }),
   ],
-  controllers: [AppController, AdministratorController, 
-    CategoryController, ArticleController, AuthController],
-  providers: [AdministratorService, CategoryService, 
-    ArticleService, PhotoService ],
+  controllers: [
+    AppController,
+    AdministratorController,
+    CategoryController,
+    ArticleController,
+    AuthController,
+    FeatureController,
+    UserCartController,
+    AdministratorOrderController,
+  ],
+  providers: [
+    AdministratorService,
+    CategoryService,
+    ArticleService,
+    PhotoService,
+    FeatureService,
+    UserService,
+    CartService,
+    OrderService,
+    OrderMailer,
+  ],
   exports: [
     AdministratorService,
+    UserService,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-   consumer
+    consumer
       .apply(AuthMiddleware)
       .exclude('auth/*')
-      .forRoutes('api/*')
+      .forRoutes('api/*');
   }
 }
